@@ -93,7 +93,13 @@ window.App = (() => {
   function errorMessage(err, fallback) {
     const p = err?.payload;
     if (!p) return fallback;
-    if (typeof p === 'string') return p;
+    if (typeof p === 'string') {
+      // If backend returns an HTML error page, do not dump raw markup to users.
+      if (p.includes('<html') || p.includes('<!DOCTYPE')) {
+        return 'Server error. Check server logs and deployment environment variables.';
+      }
+      return p;
+    }
     if (p.detail) return p.detail;
     return JSON.stringify(p);
   }
