@@ -8,7 +8,7 @@ Full-stack web app that converts a developer resume PDF into an editable, publis
 - Frontend: Django templates + HTML/CSS/JavaScript
 - Parsing: pdfplumber + regex section extraction
 - Dev DB: SQLite
-- Deploy DB: SQLite
+- Deploy DB: PostgreSQL (Render managed)
 - Deployment: Render (single web service)
 
 ## Project Structure
@@ -94,6 +94,8 @@ Backend supports:
 - `DJANGO_DEBUG`
 - `DJANGO_ALLOWED_HOSTS`
 - `CORS_ALLOWED_ORIGINS`
+- `DATABASE_URL`
+- `MEDIA_ROOT`
 
 ## Deploying to Render (Single Service)
 
@@ -104,7 +106,7 @@ This repo includes `render.yaml` that:
 3. Starts Gunicorn
 
 Django serves template pages and static assets in production.
-Deployment uses SQLite by default (no `DATABASE_URL` required).
+Deployment uses Render managed PostgreSQL through `DATABASE_URL` and stores media on a persistent disk (`/var/data/media`).
 
 ## Production URL Pattern
 
