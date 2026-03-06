@@ -21,18 +21,25 @@ export default function App() {
 
   return (
     <div>
-      <nav className="flex items-center justify-between bg-white/90 px-6 py-4 shadow-sm backdrop-blur">
-        <Link to="/" className="text-xl font-bold text-primary">Resume2Portfolio</Link>
-        <div className="flex items-center gap-3">
+      <nav className="sticky top-0 z-50 flex items-center justify-between bg-[#080b12]/80 px-6 py-4 border-b border-[#1e2d3d] backdrop-blur-xl">
+        <Link to="/" className="text-xl font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">Portfolio Builder</Link>
+        <div className="flex items-center gap-6">
           {token ? (
             <>
-              <Link to="/dashboard" className="text-sm text-slate-700">Dashboard</Link>
-              <button onClick={logout}>Logout</button>
+              <Link to="/dashboard" className="text-sm font-medium text-slate-300 hover:text-teal-400 transition-colors">Dashboard</Link>
+              <button
+                onClick={logout}
+                className="text-sm font-medium text-slate-400 hover:text-white transition-colors bg-transparent border-none p-0"
+              >
+                Logout
+              </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="text-sm text-slate-700">Login</Link>
-              <Link to="/register"><button>Register</button></Link>
+              <Link to="/login" className="text-sm font-medium text-slate-300 hover:text-teal-400 transition-colors">Login</Link>
+              <Link to="/register">
+                <button className="!bg-teal-600 hover:!bg-teal-500 shadow-lg shadow-teal-900/20">Register</button>
+              </Link>
             </>
           )}
         </div>

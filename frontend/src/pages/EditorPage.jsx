@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { Download, Save, ArrowLeft, User, FileText, Code2, GraduationCap, Briefcase, Mail, Phone, Link2 } from 'lucide-react';
 import api from '../api/client';
-import TemplateRenderer from '../components/TemplateRenderer';
+import { exportPortfolioProject } from '../utils/exportPortfolioProject';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 function normalize(data) {
   return {
@@ -68,7 +71,8 @@ export default function EditorPage() {
   const [portfolio, setPortfolio] = useState(null);
   const [form, setForm] = useState(normalize({}));
   const [error, setError] = useState('');
-  const [publishUrl, setPublishUrl] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -88,6 +92,7 @@ export default function EditorPage() {
 
   const save = async () => {
     if (!portfolio) return;
+    setSaving(true);
     try {
       const payload = {
         portfolio_data_json: previewData,
@@ -95,70 +100,164 @@ export default function EditorPage() {
       };
       const res = await api.patch(`/portfolios/${id}/`, payload);
       setPortfolio(res.data);
+      setSaving(false);
+      return res.data;
     } catch {
       setError('Save failed.');
+      setSaving(false);
       throw new Error('save failed');
     }
   };
 
-  const publish = async () => {
+  const downloadSource = async () => {
     try {
-      await save();
-      const res = await api.post(`/portfolios/${id}/publish/`);
-      setPublishUrl(res.data.public_url || '');
-    } catch {
-      setError('Publish failed.');
-    }
-  };
+      setDownloading(true);
+      const savedPortfolio = await save();
+      const sourceBundle = exportPortfolioProject(savedPortfolio.template_id, previewData);
 
-  const copyPublishUrl = async () => {
-    if (!publishUrl) return;
-    try {
-      await navigator.clipboard.writeText(publishUrl);
-    } catch {
-      setError('Unable to copy public URL. You can copy it manually.');
+      const zip = new JSZip();
+      Object.entries(sourceBundle.files).forEach(([path, content]) => {
+        zip.file(path, content);
+      });
+
+      const content = await zip.generateAsync({ type: "blob" });
+      saveAs(content, sourceBundle.fileName);
+
+    } catch (err) {
+      console.error(err);
+      setError('Failed to generate portfolio download.');
+    } finally {
+      setDownloading(false);
     }
   };
 
   if (!portfolio) {
-    return <div className="p-8">Loading editor...</div>;
+    return (
+      <div className="min-h-screen bg-[#080b12] flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
-      <h1 className="text-3xl font-bold">Portfolio Editor</h1>
-      <p className="mt-2 text-slate-600">Edit the extracted fields before publishing your portfolio.</p>
-      {publishUrl && (
-        <div className="mt-4 rounded-xl border border-teal-200 bg-teal-50 p-3 text-sm">
-          <p className="font-semibold text-teal-800">Published URL</p>
-          <p className="mt-1 break-all text-teal-900">{publishUrl}</p>
-          <div className="mt-2 flex gap-2">
-            <button onClick={copyPublishUrl}>Copy Link</button>
-            <Link to="/dashboard"><button className="!bg-accent">Back to Dashboard</button></Link>
-          </div>
-        </div>
-      )}
-      {error && <p className="mt-2 text-red-600">{error}</p>}
+    <div className="min-h-screen bg-[#080b12] py-12 px-6">
+      <div className="max-w-4xl mx-auto">
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <div className="space-y-3 rounded-xl bg-white p-4 shadow">
-          <input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-          <textarea rows="4" placeholder="About" value={form.about} onChange={(e) => setForm({ ...form, about: e.target.value })} />
-          <input placeholder="Skills (comma separated)" value={form.skills} onChange={(e) => setForm({ ...form, skills: e.target.value })} />
-          <input placeholder="Technologies (comma separated)" value={form.technologies} onChange={(e) => setForm({ ...form, technologies: e.target.value })} />
-          <textarea rows="5" placeholder="Projects (one per line: Title: Description)" value={form.projects} onChange={(e) => setForm({ ...form, projects: e.target.value })} />
-          <textarea rows="4" placeholder="Education (one per line: Degree, Institution)" value={form.education} onChange={(e) => setForm({ ...form, education: e.target.value })} />
-          <textarea rows="4" placeholder="Work Experience (one per line)" value={form.work_experience} onChange={(e) => setForm({ ...form, work_experience: e.target.value })} />
-          <input placeholder="Contact Email" value={form.contact_email} onChange={(e) => setForm({ ...form, contact_email: e.target.value })} />
-          <input placeholder="Contact Phone" value={form.contact_phone} onChange={(e) => setForm({ ...form, contact_phone: e.target.value })} />
-          <input placeholder="Contact Links (comma separated)" value={form.contact_links} onChange={(e) => setForm({ ...form, contact_links: e.target.value })} />
-          <div className="flex gap-2">
-            <button onClick={save}>Save</button>
-            <button className="!bg-accent" onClick={publish}>Publish Portfolio</button>
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-fade-up">
+          <div>
+            <Link to="/dashboard" className="inline-flex items-center gap-2 text-slate-500 hover:text-teal-400 transition-colors font-bold uppercase text-xs tracking-widest mb-4">
+              <ArrowLeft size={16} /> Back to Dashboard
+            </Link>
+            <h1 className="text-4xl font-black text-white tracking-tight">Portfolio Editor</h1>
+            <p className="text-slate-400 mt-2 font-medium">Refine your details. The live preview is disabled for faster editing.</p>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={save}
+              disabled={saving}
+              className="flex items-center gap-2 !bg-[#0f1520] !text-teal-400 border border-teal-500/30 hover:bg-teal-500/10 px-6"
+            >
+              {saving ? 'Saving...' : <><Save size={18} /> Save</>}
+            </button>
+            <button
+              className="flex items-center gap-2 !bg-teal-600 text-white hover:!bg-teal-500 shadow-xl shadow-teal-900/20 px-6 font-black"
+              onClick={downloadSource}
+              disabled={downloading}
+            >
+              {downloading ? 'Preparing...' : <><Download size={18} /> Download (.zip)</>}
+            </button>
           </div>
         </div>
-        <div className="overflow-hidden rounded-xl shadow">
-          <TemplateRenderer templateId={portfolio.template_id} data={previewData} />
+
+        {error && <p className="mb-8 bg-red-900/20 text-red-400 p-4 rounded-xl border border-red-900/30 text-center animate-fade-up">{error}</p>}
+
+        {/* Editor Form */}
+        <div className="grid gap-8 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+
+          {/* Section: Basics */}
+          <div className="bg-[#0f1520] border border-[#1e2d3d] rounded-3xl p-8 md:p-10">
+            <h2 className="text-xl font-bold text-white mb-8 flex items-center gap-3 border-b border-[#1e2d3d] pb-4">
+              <User size={20} className="text-teal-500" /> Basic Information
+            </h2>
+            <div className="grid gap-6">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Display Name</label>
+                <input placeholder="Ex: John Doe" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Short Bio</label>
+                <textarea rows="4" placeholder="Ex: Senior Full Stack Engineer with 5 years experience..." value={form.about} onChange={(e) => setForm({ ...form, about: e.target.value })} />
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Skills & Tech */}
+          <div className="bg-[#0f1520] border border-[#1e2d3d] rounded-3xl p-8 md:p-10">
+            <h2 className="text-xl font-bold text-white mb-8 flex items-center gap-3 border-b border-[#1e2d3d] pb-4">
+              <Code2 size={20} className="text-teal-500" /> Skills & Stack
+            </h2>
+            <div className="grid gap-6">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Core Skills (Comma separated)</label>
+                <input placeholder="Python, React, AWS, Docker" value={form.skills} onChange={(e) => setForm({ ...form, skills: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Primary Technologies</label>
+                <input placeholder="TypeScript, Node.js, GraphQL" value={form.technologies} onChange={(e) => setForm({ ...form, technologies: e.target.value })} />
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Projects */}
+          <div className="bg-[#0f1520] border border-[#1e2d3d] rounded-3xl p-8 md:p-10">
+            <h2 className="text-xl font-bold text-white mb-8 flex items-center gap-3 border-b border-[#1e2d3d] pb-4">
+              <FileText size={20} className="text-teal-500" /> Featured Projects
+            </h2>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Format: "Title: Brief Description" (One per line)</label>
+              <textarea rows="6" placeholder="Project AI: Built a custom LLM from scratch..." value={form.projects} onChange={(e) => setForm({ ...form, projects: e.target.value })} />
+            </div>
+          </div>
+
+          {/* Section: Education & Work */}
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-[#0f1520] border border-[#1e2d3d] rounded-3xl p-8">
+              <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
+                <GraduationCap size={18} className="text-teal-500" /> Education
+              </h2>
+              <textarea rows="4" placeholder="BS Computer Science, MIT" value={form.education} onChange={(e) => setForm({ ...form, education: e.target.value })} />
+            </div>
+            <div className="bg-[#0f1520] border border-[#1e2d3d] rounded-3xl p-8">
+              <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
+                <Briefcase size={18} className="text-teal-500" /> Work History
+              </h2>
+              <textarea rows="4" placeholder="Software Architect at Google" value={form.work_experience} onChange={(e) => setForm({ ...form, work_experience: e.target.value })} />
+            </div>
+          </div>
+
+          {/* Section: Contact */}
+          <div className="bg-[#0f1520] border border-[#1e2d3d] rounded-3xl p-8 md:p-10 mb-12">
+            <h2 className="text-xl font-bold text-white mb-8 flex items-center gap-3 border-b border-[#1e2d3d] pb-4">
+              <Mail size={20} className="text-teal-500" /> Contact Details
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2"><Mail size={12} /> Email</label>
+                <input placeholder="hello@world.com" value={form.contact_email} onChange={(e) => setForm({ ...form, contact_email: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2"><Phone size={12} /> Phone</label>
+                <input placeholder="+1 234 567 890" value={form.contact_phone} onChange={(e) => setForm({ ...form, contact_phone: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2"><Link2 size={12} /> Links</label>
+                <input placeholder="github.com/user, linkedin.com/user" value={form.contact_links} onChange={(e) => setForm({ ...form, contact_links: e.target.value })} />
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

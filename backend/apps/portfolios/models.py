@@ -9,6 +9,8 @@ class Portfolio(models.Model):
         ('cards', 'Modern Card Layout'),
         ('professional', 'Professional Template'),
         ('creative', 'Creative Template'),
+        ('terminal', 'Hacker CLI Terminal'),
+        ('robotic', 'Cyberpunk Robotic Mode'),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='portfolios')

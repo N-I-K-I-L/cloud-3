@@ -9,7 +9,11 @@ const styles = {
 export default function PortfolioShell({ templateId, children }) {
   return (
     <div className={`min-h-screen ${styles[templateId] || styles.minimal}`}>
-      <div className="mx-auto max-w-4xl px-6 py-10">{children}</div>
+      {templateId === 'dark' ? (
+        children
+      ) : (
+        <div className="mx-auto max-w-4xl px-6 py-10">{children}</div>
+      )}
     </div>
   );
 }
