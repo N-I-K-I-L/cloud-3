@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Github, Linkedin, Mail, MapPin, Phone, ExternalLink, ChevronDown, Download } from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, Phone, ExternalLink, ChevronDown, Download, Sparkles } from 'lucide-react';
 
 export default function DarkTemplate({ data }) {
   const [scrolled, setScrolled] = useState(false);
@@ -20,22 +20,25 @@ export default function DarkTemplate({ data }) {
   };
 
   const navLinks = ['About', 'Skills', 'Projects', 'Experience', 'Contact'];
+  const projects = Array.isArray(data.projects) ? data.projects : [];
+  const skills = Array.isArray(data.skills) ? data.skills : [];
+  const experience = Array.isArray(data.work_experience) ? data.work_experience : [];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-purple-500/30">
+    <div className="min-h-screen bg-[#000000] text-slate-200 font-sans selection:bg-blue-500/30">
 
       {/* Sticky Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-slate-950/80 backdrop-blur-md border-b border-white/5 py-4' : 'bg-transparent py-6'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-black/80 backdrop-blur-xl border-b border-white/5 py-4' : 'bg-transparent py-8'}`}>
         <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
-          <div className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            {data.name?.split(' ')[0]}<span className="text-white">.</span>
+          <div className="text-2xl font-black tracking-tighter text-white uppercase italic">
+            {data.name?.split(' ')[0]}<span className="text-blue-500">_</span>
           </div>
-          <div className="hidden md:flex gap-8 text-sm font-medium tracking-wide">
+          <div className="hidden md:flex gap-10 text-[10px] font-black uppercase tracking-[0.2em]">
             {navLinks.map((link) => (
               <button
                 key={link}
                 onClick={() => scrollToSection(link.toLowerCase())}
-                className="text-slate-400 hover:text-white transition-colors"
+                className="text-slate-500 hover:text-white transition-colors"
               >
                 {link}
               </button>
@@ -45,79 +48,75 @@ export default function DarkTemplate({ data }) {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 pt-20">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950 z-0"></div>
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#111827_0%,_#000000_100%)] z-0"></div>
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8 animate-fade-in-up">
-          <h2 className="text-blue-400 font-medium tracking-widest uppercase text-sm md:text-base">
-            {data.about?.split('.')[0] || 'Welcome to my portfolio'}
-          </h2>
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
-            Hi, I'm <br className="md:hidden" />
-            <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">
-              {data.name}
-            </span>
+        {/* Animated Glows */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-purple-600/5 rounded-full blur-[100px]"></div>
+
+        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-blue-400">
+            <Sparkles size={14} /> Available for projects
+          </div>
+          <h1 className="text-6xl md:text-9xl font-black tracking-tight text-white leading-[0.9] uppercase italic">
+            {data.name}
           </h1>
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 leading-relaxed">
-            {data.about}
+          <p className="max-w-2xl mx-auto text-lg md:text-2xl text-slate-400 font-medium leading-relaxed italic">
+            "{data.about}"
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 pt-8">
             <button
               onClick={() => scrollToSection('projects')}
-              className="px-8 py-3 rounded-full bg-white text-slate-950 font-semibold hover:scale-105 transition-transform duration-300"
+              className="px-12 py-5 rounded-full bg-blue-600 text-white font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-[0_0_40px_rgba(37,99,235,0.3)] hover:scale-105"
             >
-              View Projects
+              The Work
             </button>
             <button
               onClick={() => scrollToSection('contact')}
-              className="px-8 py-3 rounded-full border border-white/20 text-white font-semibold hover:bg-white/5 hover:border-white/40 transition-all duration-300 flex items-center gap-2"
+              className="px-12 py-5 rounded-full border border-white/20 text-white font-black uppercase tracking-widest hover:bg-white/5 transition-all"
             >
-              <Download size={18} />
-              Download Resume
+              Get In Touch
             </button>
           </div>
         </div>
 
         <button
           onClick={() => scrollToSection('about')}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-500 hover:text-white transition-colors animate-bounce"
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 text-slate-600 hover:text-white transition-colors animate-bounce"
         >
-          <ChevronDown size={32} />
+          <ChevronDown size={40} />
         </button>
       </section>
 
-      {/* Main Content Wrapper */}
-      <div className="max-w-5xl mx-auto px-6 py-24 space-y-32">
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-6 py-32 space-y-48">
 
         {/* About Section */}
-        <section id="about" className="scroll-mt-24">
-          <div className="grid md:grid-cols-12 gap-12 items-center">
-            <div className="md:col-span-5 relative group">
-              <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
-              <div className="relative aspect-square backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl overflow-hidden flex items-center justify-center">
-                {/* Fallback avatar if no image provided */}
-                <div className="text-9xl font-bold text-slate-800">
+        <section id="about" className="scroll-mt-32">
+          <div className="grid md:grid-cols-2 gap-24 items-center">
+            <div className="relative">
+              <div className="aspect-[4/5] bg-zinc-900 rounded-3xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
+                <div className="w-full h-full flex items-center justify-center text-9xl font-black text-black bg-zinc-800">
                   {data.name?.charAt(0)}
                 </div>
               </div>
+              <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-blue-600/20 rounded-full blur-3xl -z-10"></div>
             </div>
-            <div className="md:col-span-7 space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold text-white">About Me</h2>
-              <div className="w-12 h-1 bg-purple-500 rounded"></div>
-              <p className="text-lg text-slate-400 leading-relaxed">
+            <div className="space-y-8">
+              <h2 className="text-5xl font-black uppercase italic tracking-tighter text-white">Behind The Identity</h2>
+              <p className="text-xl text-slate-400 leading-relaxed font-light">
                 {data.about}
               </p>
-              <div className="grid grid-cols-2 gap-6 pt-4">
+              <div className="grid grid-cols-2 gap-12 pt-8 border-t border-white/5">
                 <div>
-                  <h3 className="text-slate-300 font-medium mb-1">Location</h3>
-                  <p className="text-slate-500 flex items-center gap-2"><MapPin size={16} /> Remote / Global</p>
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 mb-2">Location_</h3>
+                  <p className="text-white font-bold">Earth / Remote</p>
                 </div>
                 <div>
-                  <h3 className="text-slate-300 font-medium mb-1">Email</h3>
-                  <p className="text-slate-500 flex items-center gap-2"><Mail size={16} /> {data.contact_email?.split('@')[0]}@...</p>
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 mb-2">Experience_</h3>
+                  <p className="text-white font-bold">{experience.length}+ Major Cycles</p>
                 </div>
               </div>
             </div>
@@ -125,17 +124,13 @@ export default function DarkTemplate({ data }) {
         </section>
 
         {/* Skills Section */}
-        <section id="skills" className="scroll-mt-24">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-white">Technical Arsenal</h2>
-            <div className="w-12 h-1 bg-purple-500 rounded mt-6"></div>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            {(data.technologies || data.skills || []).map((skill, idx) => (
+        <section id="skills" className="scroll-mt-32">
+          <h2 className="text-5xl font-black uppercase italic tracking-tighter text-white mb-16">Technical Mastery</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {skills.map((skill, idx) => (
               <div
                 key={idx}
-                className="px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 cursor-default"
+                className="p-8 rounded-2xl bg-[#0a0a0a] border border-white/5 flex items-center justify-center text-center font-bold uppercase tracking-widest text-slate-500 hover:text-blue-400 hover:border-blue-500/30 transition-all cursor-default"
               >
                 {skill}
               </div>
@@ -144,50 +139,31 @@ export default function DarkTemplate({ data }) {
         </section>
 
         {/* Projects Section */}
-        <section id="projects" className="scroll-mt-24">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-white">Featured Work</h2>
-            <div className="w-12 h-1 bg-purple-500 rounded mt-6"></div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {(data.projects || []).map((project, idx) => {
-              const parts = project.split(':');
+        <section id="projects" className="scroll-mt-32">
+          <h2 className="text-5xl font-black uppercase italic tracking-tighter text-white mb-16">The Portfolio</h2>
+          <div className="space-y-32">
+            {projects.map((project, idx) => {
+              const parts = typeof project === 'string' ? project.split(':') : [project.title, project.description];
               const title = parts[0];
               const desc = parts.slice(1).join(':').trim();
 
               return (
-                <div
-                  key={idx}
-                  className="group relative bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-500 overflow-hidden flex flex-col h-full"
-                >
-                  {/* Subtle top gradient on hover */}
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="p-3 bg-white/5 rounded-lg text-purple-400">
-                      <Github size={24} />
-                    </div>
-                    <div className="flex gap-3 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <button className="hover:text-white"><Github size={20} /></button>
-                      <button className="hover:text-white"><ExternalLink size={20} /></button>
+                <div key={idx} className={`flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-16 items-center group`}>
+                  <div className="w-full md:w-1/2 aspect-video bg-zinc-900 rounded-3xl overflow-hidden relative">
+                    <div className="absolute inset-0 bg-blue-600/[0.05] group-hover:bg-transparent transition-colors duration-500" />
+                    <div className="w-full h-full flex items-center justify-center text-zinc-800 font-black text-6xl italic group-hover:scale-110 transition-transform duration-700 uppercase tracking-tighter">
+                      Project_0{idx + 1}
                     </div>
                   </div>
-
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">
-                    {title}
-                  </h3>
-                  <p className="text-slate-400 mb-6 flex-grow">
-                    {desc || 'A comprehensive application built to solve advanced workflow challenges.'}
-                  </p>
-
-                  {/* Fake tech tags for visual flair based on global skills */}
-                  <div className="flex flex-wrap gap-2 mt-auto pt-6 border-t border-white/5">
-                    {(data.technologies || data.skills || []).slice(0, 3).map((tech, i) => (
-                      <span key={i} className="text-xs font-mono text-purple-400/80 bg-purple-500/10 px-2 py-1 rounded">
-                        {tech}
-                      </span>
-                    ))}
+                  <div className="w-full md:w-1/2 space-y-6">
+                    <span className="text-blue-500 font-mono text-sm uppercase tracking-widest italic font-bold">Case Study 0{idx + 1}_</span>
+                    <h3 className="text-4xl font-black text-white group-hover:text-blue-400 transition-colors uppercase italic">{title}</h3>
+                    <p className="text-lg text-slate-400 leading-relaxed font-light">
+                      {desc || "A sophisticated architecture designed to push the boundaries of digital interaction and functional excellence."}
+                    </p>
+                    <button className="flex items-center gap-2 text-white font-bold uppercase tracking-widest text-[10px] mt-4 hover:text-blue-500 transition-colors group">
+                      Explore Project <ArrowUpRight className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </button>
                   </div>
                 </div>
               );
@@ -195,120 +171,22 @@ export default function DarkTemplate({ data }) {
           </div>
         </section>
 
-        {/* Experience & Education Grid */}
-        <section id="experience" className="scroll-mt-24">
-          <div className="grid md:grid-cols-2 gap-16">
-
-            {/* Experience */}
-            <div>
-              <div className="mb-10">
-                <h2 className="text-3xl font-bold text-white">Experience</h2>
-                <div className="w-12 h-1 bg-purple-500 rounded mt-6"></div>
-              </div>
-
-              <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/10 before:to-transparent">
-                {(data.work_experience || []).map((exp, idx) => (
-                  <div key={idx} className="relative pl-8 md:pl-0">
-                    <div className="md:hidden absolute left-5 -translate-x-1/2 w-3 h-3 rounded-full bg-slate-950 border-2 border-purple-500"></div>
-
-                    <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors">
-                      <h3 className="text-xl font-bold text-white">{exp.role || exp.description || exp}</h3>
-                      <p className="text-purple-400 text-sm font-medium mt-1">Company / Organization</p>
-                      <p className="text-slate-400 mt-4 text-sm leading-relaxed">
-                        Demonstrated expertise in software development lifecycles and modern architecture. Delivered high-quality solutions while collaborating with cross-functional teams.
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Education */}
-            <div>
-              <div className="mb-10">
-                <h2 className="text-3xl font-bold text-white">Education</h2>
-                <div className="w-12 h-1 bg-purple-500 rounded mt-6"></div>
-              </div>
-
-              <div className="space-y-6">
-                {(data.education || []).map((edu, idx) => {
-                  const parts = typeof edu === 'string' ? edu.split(',') : [edu.degree, edu.institution];
-                  return (
-                    <div key={idx} className="group flex gap-5 p-6 rounded-2xl border border-transparent hover:border-white/10 hover:bg-white/5 transition-all">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                        🎓
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-white">{parts[0]}</h3>
-                        <p className="text-slate-400 mt-1">{parts[1] || 'University / Institution'}</p>
-                        <p className="text-slate-500 text-sm mt-3 border-l-2 border-white/10 pl-3">
-                          Focused on computer science fundamentals, algorithms, and full-stack development.
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-          </div>
-        </section>
-
         {/* Contact Section */}
-        <section id="contact" className="scroll-mt-24 pt-12 pb-24 border-t border-white/5">
-          <div className="grid md:grid-cols-2 gap-16 items-start">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Let's work <br className="hidden md:block" />together.</h2>
-              <p className="text-slate-400 text-lg mb-10 max-w-md">
-                I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!
-              </p>
-
-              <div className="space-y-6">
-                {data.contact_email && (
-                  <a href={`mailto:${data.contact_email}`} className="flex items-center gap-4 text-slate-300 hover:text-white transition-colors group">
-                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                      <Mail size={20} />
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-500 mb-0.5">Email</p>
-                      <p className="font-medium">{data.contact_email}</p>
-                    </div>
-                  </a>
-                )}
-
-                {data.contact_phone && (
-                  <a href={`tel:${data.contact_phone}`} className="flex items-center gap-4 text-slate-300 hover:text-white transition-colors group">
-                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                      <Phone size={20} />
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-500 mb-0.5">Phone</p>
-                      <p className="font-medium">{data.contact_phone}</p>
-                    </div>
-                  </a>
-                )}
-              </div>
-            </div>
-
-            {/* Simple Contact Form UI */}
-            <div className="bg-white/5 border border-white/10 p-8 rounded-2xl">
-              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Name</label>
-                  <input type="text" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="John Doe" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Email</label>
-                  <input type="email" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="john@example.com" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Message</label>
-                  <textarea rows="4" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-colors resize-none" placeholder="Hello, I'd like to discuss..."></textarea>
-                </div>
-                <button type="submit" className="w-full bg-white text-slate-950 font-bold py-4 rounded-xl hover:bg-slate-200 transition-colors">
-                  Send Message
-                </button>
-              </form>
+        <section id="contact" className="scroll-mt-32 text-center space-y-12 py-32 bg-[radial-gradient(circle_at_center,_#111827_0%,_transparent_70%)] rounded-[100px]">
+          <h2 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter text-white leading-none">
+            Ready to initiate <br /> a collaboration?
+          </h2>
+          <p className="text-xl text-slate-400 max-w-xl mx-auto font-light leading-relaxed">
+            I'm currently scouting for high-impact partnerships. Reach out if you're looking to build something extraordinary.
+          </p>
+          <div className="pt-8 flex flex-col items-center gap-8">
+            <a href={`mailto:${data.contact?.email}`} className="text-3xl md:text-5xl font-black text-white hover:text-blue-500 transition-colors border-b-4 border-blue-600 pb-2">
+              {data.contact?.email || "CONTACT@STUDIO.ID"}
+            </a>
+            <div className="flex gap-8">
+              <a href="#" className="text-slate-500 hover:text-blue-400 font-black uppercase tracking-[0.2em] text-[10px]">LinkedIn_</a>
+              <a href="#" className="text-slate-500 hover:text-blue-400 font-black uppercase tracking-[0.2em] text-[10px]">GitHub_</a>
+              <a href="#" className="text-slate-500 hover:text-blue-400 font-black uppercase tracking-[0.2em] text-[10px]">Dribbble_</a>
             </div>
           </div>
         </section>
@@ -316,25 +194,24 @@ export default function DarkTemplate({ data }) {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-10 px-6">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-slate-500 text-sm">
-            © {new Date().getFullYear()} {data.name}. All rights reserved.
-          </p>
-
-          <div className="flex gap-4">
-            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
-              <Github size={18} />
-            </a>
-            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
-              <Linkedin size={18} />
-            </a>
-            <a href={`mailto:${data.contact_email}`} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
-              <Mail size={18} />
-            </a>
+      <footer className="py-12 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-600">
+          <p>© {new Date().getFullYear()} {data.name} Studio. All rights reserved.</p>
+          <div className="flex gap-12">
+            <span>Built with Precision</span>
+            <span>Est. 2024</span>
           </div>
         </div>
       </footer>
     </div>
   );
 }
+
+// Minimal Arrow Icon Helper
+const ArrowUpRight = ({ className }) => (
+  <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="7" y1="17" x2="17" y2="7"></line>
+    <polyline points="7 7 17 7 17 17"></polyline>
+  </svg>
+);
+
