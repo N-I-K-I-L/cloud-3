@@ -122,6 +122,10 @@ def editor_page(request, portfolio_id):
     return render(request, 'web/editor.html', {'portfolio_id': portfolio_id})
 
 
+def spa_entry(request, path=''):
+    return render(request, 'index.html')
+
+
 def public_portfolio_page(request, username):
     user = get_object_or_404(User, username=username)
     portfolio = (

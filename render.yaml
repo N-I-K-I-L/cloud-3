@@ -1,20 +1,15 @@
 services:
   - type: web
     name: resume-portfolio-generator
-    env: python
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     disk:
       name: media-data
       mountPath: /var/data
       sizeGB: 1
-    buildCommand: |
-      pip install --upgrade pip
-      pip install -r backend/requirements.txt
-      python backend/manage.py migrate
-      python backend/manage.py collectstatic --noinput
-    startCommand: gunicorn config.wsgi:application --chdir backend --bind 0.0.0.0:$PORT
+    healthCheckPath: /
     envVars:
-      - key: PYTHON_VERSION
-        value: "3.11.11"
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DJANGO_DEBUG
@@ -25,6 +20,8 @@ services:
         value: "https://*.onrender.com"
       - key: MEDIA_ROOT
         value: "/var/data/media"
+      - key: PORT
+        value: "10000"
       - key: DATABASE_URL
         fromDatabase:
           name: resume-portfolio-db

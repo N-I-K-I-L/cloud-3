@@ -1,0 +1,11 @@
+.git
+.gitignore
+backend/.venv
+backend/db.sqlite3
+backend/media
+backend/staticfiles
+frontend/node_modules
+frontend/build
+npm-debug.log
+*.pyc
+__pycache__
