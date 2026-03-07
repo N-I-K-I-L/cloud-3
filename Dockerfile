@@ -1,4 +1,7 @@
 FROM node:20-bookworm-slim AS frontend-builder
+ENV CI=false
+ENV GENERATE_SOURCEMAP=false
+ENV NODE_OPTIONS=--max-old-space-size=512
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
