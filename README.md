@@ -1,4 +1,4 @@
-# AI-Based Resume-to-Portfolio Generator
+# Portfolio Builder Generator
 
 Full-stack web app that converts a developer resume PDF into an editable, publishable portfolio website.
 
