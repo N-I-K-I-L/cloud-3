@@ -3,7 +3,7 @@ import MinimalTemplate from '../templates/MinimalTemplate';
 import DarkTemplate from '../templates/DarkTemplate';
 import CardTemplate from '../templates/CardTemplate';
 import TerminalTemplate from '../templates/TerminalTemplate';
-import { RoboticTemplate } from '../templates/RoboticTemplate';
+import RoboticTemplate from '../templates/RoboticTemplate';
 import PortfolioShell from './PortfolioShell';
 
 export default function TemplateRenderer({ templateId, data }) {
