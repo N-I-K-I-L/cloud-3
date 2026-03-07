@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import UploadResumePage from './pages/UploadResumePage';
 import EditorPage from './pages/EditorPage';
+import ExportPage from './pages/ExportPage';
 import PublicPortfolioPage from './pages/PublicPortfolioPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -70,6 +71,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <EditorPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/export/:id"
+          element={
+            <ProtectedRoute>
+              <ExportPage />
             </ProtectedRoute>
           }
         />

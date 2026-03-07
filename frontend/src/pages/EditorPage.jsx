@@ -112,20 +112,11 @@ export default function EditorPage() {
   const downloadSource = async () => {
     try {
       setDownloading(true);
-      const savedPortfolio = await save();
-      const sourceBundle = exportPortfolioProject(savedPortfolio.template_id, previewData);
-
-      const zip = new JSZip();
-      Object.entries(sourceBundle.files).forEach(([path, content]) => {
-        zip.file(path, content);
-      });
-
-      const content = await zip.generateAsync({ type: "blob" });
-      saveAs(content, sourceBundle.fileName);
-
+      await save();
+      navigate(`/export/${id}`);
     } catch (err) {
       console.error(err);
-      setError('Failed to generate portfolio download.');
+      setError('Failed to prepare export.');
     } finally {
       setDownloading(false);
     }
@@ -162,11 +153,11 @@ export default function EditorPage() {
               {saving ? 'Saving...' : <><Save size={18} /> Save</>}
             </button>
             <button
-              className="flex items-center gap-2 !bg-teal-600 text-white hover:!bg-teal-500 shadow-xl shadow-teal-900/20 px-6 font-black"
+              className="flex items-center gap-2 !bg-teal-600 text-white hover:!bg-teal-500 shadow-xl shadow-teal-900/20 px-6 font-black uppercase tracking-widest text-[10px]"
               onClick={downloadSource}
               disabled={downloading}
             >
-              {downloading ? 'Preparing...' : <><Download size={18} /> Download (.zip)</>}
+              {downloading ? 'Preparing...' : <><Download size={18} /> Continue to Export</>}
             </button>
           </div>
         </div>
