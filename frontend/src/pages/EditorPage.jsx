@@ -1,10 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Download, Save, ArrowLeft, User, FileText, Code2, GraduationCap, Briefcase, Mail, Phone, Link2 } from 'lucide-react';
 import api from '../api/client';
-import { exportPortfolioProject } from '../utils/exportPortfolioProject';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
 
 function normalize(data) {
   return {
@@ -68,6 +65,7 @@ function denormalize(form) {
 
 export default function EditorPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [portfolio, setPortfolio] = useState(null);
   const [form, setForm] = useState(normalize({}));
   const [error, setError] = useState('');
