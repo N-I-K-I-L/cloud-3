@@ -15,5 +15,5 @@ export default function TemplateRenderer({ templateId, data }) {
     robotic: <RoboticTemplate data={data} />
   };
 
-  return <PortfolioShell templateId={templateId}>{renderMap[templateId] || renderMap.minimal}</PortfolioShell>;
+  return <PortfolioShell>{renderMap[templateId] || renderMap.minimal}</PortfolioShell>;
 }

@@ -107,9 +107,9 @@ export default function ExportPage() {
                             className="flex-1 md:flex-none px-12 py-4 rounded-2xl bg-blue-600 text-white font-black uppercase tracking-[0.2em] text-[10px] hover:bg-blue-500 transition-all shadow-[0_0_40px_rgba(37,99,235,0.3)] hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-3"
                         >
                             {downloading ? (
-                                <>Packing ZIP...</>
+                                <>Generating ZIP...</>
                             ) : (
-                                <><Download size={16} /> Deploy & Download</>
+                                <><Download size={16} /> Download .zip</>
                             )}
                         </button>
                     </div>
