@@ -82,12 +82,7 @@ export default function DarkTemplate({ data }) {
           </div>
         </div>
 
-        <button
-          onClick={() => scrollToSection('about')}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 text-slate-600 hover:text-white transition-colors animate-bounce"
-        >
-          <ChevronDown size={40} />
-        </button>
+
       </section>
 
       {/* Main Content */}

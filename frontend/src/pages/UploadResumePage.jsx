@@ -98,7 +98,7 @@ export default function UploadResumePage() {
           <div className="animate-fade-up">
             <div className="text-center mb-12">
               <h1 className="text-4xl font-black text-white mb-3 tracking-tight">Choose a Template</h1>
-              <p className="text-slate-400 text-lg font-medium">Select the DNA of your future portfolio.</p>
+
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
